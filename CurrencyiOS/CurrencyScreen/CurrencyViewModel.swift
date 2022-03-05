@@ -6,3 +6,21 @@
 //
 
 import Foundation
+
+protocol CurrencyViewModelProtocol: AnyObject {
+    
+}
+
+class CurrencyViewModel {
+    
+    weak var view: CurrencyViewProtocol?
+    
+    init(view: CurrencyViewProtocol) {
+        self.view = view
+    }
+    
+}
+
+extension CurrencyViewModel: CurrencyViewModelProtocol {
+    
+}
