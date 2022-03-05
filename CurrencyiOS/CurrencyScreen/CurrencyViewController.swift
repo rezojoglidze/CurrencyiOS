@@ -13,11 +13,12 @@ protocol CurrencyViewProtocol: AnyObject {
 
 class CurrencyViewController: UIViewController {
 
-    @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet weak var submitBtn: UIButton!
-    
+ 
     var viewModel: CurrencyViewModelProtocol!
-
+    @IBOutlet private weak var submitBtn: UIButton!
+    @IBOutlet private weak var myBalanceCollectionView: UICollectionView!
+    @IBOutlet private weak var amountConvertView: AmountConvertView!
+    
     static func instantiate() -> CurrencyViewController {
         let storyBoard = UIStoryboard(name: "Currency", bundle: nil)
         let viewController = storyBoard.instantiateViewController(withIdentifier: "CurrencyViewController") as? CurrencyViewController ?? .init()
@@ -26,8 +27,18 @@ class CurrencyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        setupCollectionView()
         setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObservers()
     }
     
     private func setupView() {
@@ -35,12 +46,37 @@ class CurrencyViewController: UIViewController {
         submitBtn.layer.cornerRadius = 24
     }
     
-    private func setupTableView() {
-        tableView.register(UINib(nibName: String(describing: MyBalancesTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: MyBalancesTableViewCell.self))
+    private func setupCollectionView() {
+        myBalanceCollectionView.register(UINib(nibName: String(describing: MyBalancesCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: MyBalancesCell.self))
+        myBalanceCollectionView.dataSource = self
+        myBalanceCollectionView.delegate = self
+    }
+    
+    
+    private func setupKeyboardObservers() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc private func adjustForKeyboard(notification: Notification) {
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         
-        tableView.register(UINib(nibName: String(describing: CurrencyExchangeTableViewCell.self), bundle: nil), forCellReuseIdentifier: String(describing: CurrencyExchangeTableViewCell.self))
-        tableView.dataSource = self
-        tableView.delegate = self
+        let keyboardScreenEndFrame = keyboardValue.cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = .zero
+        } else {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
+        }
+        
+        scrollView.scrollIndicatorInsets = scrollView.contentInset
+    }
+    
+    private func removeKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
 }
@@ -49,31 +85,13 @@ extension CurrencyViewController: CurrencyViewProtocol {
     
 }
 
-extension CurrencyViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.titleForHeaderInSection(with: section)
+extension CurrencyViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.numberOfSections
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsInSection(with: section)
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let allCasses = CurrencyViewSection.allCases
-        
-        switch allCasses[indexPath.section] {
-        case .myBalances:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: MyBalancesTableViewCell.self)) as? MyBalancesTableViewCell
-            return cell ?? UITableViewCell()
-        case .exchange:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: CurrencyExchangeTableViewCell.self)) as? CurrencyExchangeTableViewCell
-            return cell ?? UITableViewCell()
-        }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MyBalancesCell.self), for: indexPath) as? MyBalancesCell
+        return cell ?? UICollectionViewCell()
     }
 }
