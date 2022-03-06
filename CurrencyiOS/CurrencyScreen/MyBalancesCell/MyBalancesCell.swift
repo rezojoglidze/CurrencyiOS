@@ -8,10 +8,10 @@
 import UIKit
 
 class MyBalancesCell: UICollectionViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    
+    @IBOutlet weak var amountWithCurrencyLbl: UILabel!
+    
+    func fill(text: String) {
+        self.amountWithCurrencyLbl.text = text
     }
-
 }

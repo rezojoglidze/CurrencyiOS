@@ -6,54 +6,40 @@
 //
 
 import Foundation
-import UIKit
 
-enum CurrencyViewSection: String, CaseIterable {
-    case myBalances = "MY BALANCES"
-    case exchange = "CURRENCY EXCHNGES"
-}
-
-enum availableCurrencies: CaseIterable {
+enum availableCurrencies: String, CaseIterable {
     case eur
     case usd
     case jpy
 }
 
 protocol CurrencyViewModelProtocol: AnyObject {
-    var numberOfSections: Int { get }
-    func titleForHeaderInSection(with section: Int) -> String
-    func numberOfRowsInSection(with section: Int) -> Int
+    var numberOfItemsInSection: Int { get }
+    func getMyBalanceInfo(with index: Int) -> (Double, String)
 }
 
 class CurrencyViewModel {
     
     weak var view: CurrencyViewProtocol?
+    private let userBalance: [availableCurrencies: Double] = [
+        availableCurrencies.eur: 1000,
+        availableCurrencies.usd: 0,
+        availableCurrencies.jpy: 0
+    ]
     
     init(view: CurrencyViewProtocol) {
         self.view = view
     }
-    
 }
 
 extension CurrencyViewModel: CurrencyViewModelProtocol {
-    
-    func numberOfRowsInSection(with section: Int) -> Int {
-        let allCases = CurrencyViewSection.allCases
-        
-        switch allCases[section] {
-        case .myBalances:
-            return availableCurrencies.allCases.count
-        case .exchange:
-            return 1
-        }
+    func getMyBalanceInfo(with index: Int) -> (Double, String) {
+        let currency = availableCurrencies.allCases[index]
+        let balance = userBalance[currency]
+        return (balance ?? 0, currency.rawValue)
     }
     
-    func titleForHeaderInSection(with section: Int) -> String {
-        return CurrencyViewSection.allCases[section].rawValue
+    var numberOfItemsInSection: Int {
+        return availableCurrencies.allCases.count
     }
-    
-    var numberOfSections: Int {
-        return CurrencyViewSection.allCases.count
-    }
-    
 }

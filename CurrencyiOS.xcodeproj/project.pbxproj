@@ -78,7 +78,7 @@
 				A94A7C4427D387EC00E23EB7 /* Resourcess */,
 				A9E48E1127D388E40061B09D /* Coordinator */,
 				A984F82027D3AC9000F8132D /* NibWrapperView.swift */,
-				A984F82227D3ACB400F8132D /* UIView+Nib.swift */,
+				A984F82427D3B6C300F8132D /* Extensions */,
 				A984F81D27D3A51B00F8132D /* AmountConvertView */,
 				A94A7C4227D387AB00E23EB7 /* CurrencyScreen */,
 			);
@@ -131,6 +131,14 @@
 				A984F81E27D3A52700F8132D /* AmountConvertView.xib */,
 			);
 			path = AmountConvertView;
+			sourceTree = "<group>";
+		};
+		A984F82427D3B6C300F8132D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A984F82227D3ACB400F8132D /* UIView+Nib.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		A9E48E1127D388E40061B09D /* Coordinator */ = {

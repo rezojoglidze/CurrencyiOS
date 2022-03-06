@@ -3,4 +3,102 @@
    uuid = "32B9F46B-66F7-478F-9C45-D30C02D1AD57"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "08053D24-0AC4-42B6-A07B-7915581C74F8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CurrencyiOS/CurrencyScreen/CurrencyViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "didTappedCurrencyChooseBtn(isSell:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38AFC267-9E50-45D1-A12D-4387772EB257"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CurrencyiOS/CurrencyScreen/CurrencyViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "didTappedCurrencyChooseBtn(isSell:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6ACFFAB7-158D-496E-A3CD-1F9BA1953BA8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CurrencyiOS/AmountConvertView/AmountConvertView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "sellCurrencyChooseBtnTapped(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "652EF082-3AA6-4E37-A1A1-69A5224C1D43"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CurrencyiOS/AmountConvertView/AmountConvertView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
+            landmarkName = "AmountConvertView"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "652EF082-3AA6-4E37-A1A1-69A5224C1D43 - 20506bedb01aa793"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CurrencyiOS.AmountConvertView.delegate.modify : Swift.Optional&lt;CurrencyiOS.AmountConvertViewDelegate&gt;"
+                  moduleName = "CurrencyiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rezojoglidze/Desktop/CurrencyiOS/CurrencyiOS/AmountConvertView/AmountConvertView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  uuid = "652EF082-3AA6-4E37-A1A1-69A5224C1D43 - a3dc32aee0bd20bb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CurrencyiOS.AmountConvertView.delegate.modify : Swift.Optional&lt;CurrencyiOS.AmountConvertViewDelegate&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "CurrencyiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rezojoglidze/Desktop/CurrencyiOS/CurrencyiOS/AmountConvertView/AmountConvertView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "17">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
