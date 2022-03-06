@@ -20,7 +20,7 @@ class CurrencyCoordinator: Coordinator {
     
     func start() {
         let view = CurrencyViewController.instantiate()
-        let viewModel = CurrencyViewModel(view: view)
+        let viewModel = CurrencyViewModel(view: view, coordinator: self)
         view.viewModel = viewModel
         navigationController.setViewControllers([view], animated: true)
     }

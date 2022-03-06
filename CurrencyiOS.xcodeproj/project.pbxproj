@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A923C7B627D4FD4900E929B7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A923C7B527D4FD4900E929B7 /* NetworkManager.swift */; };
+		A923C7BA27D4FD7600E929B7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A923C7B927D4FD7600E929B7 /* Constants.swift */; };
+		A923C7BC27D4FE9400E929B7 /* BasicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A923C7BB27D4FE9400E929B7 /* BasicError.swift */; };
+		A923C7C027D5003F00E929B7 /* Convertation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A923C7BF27D5003F00E929B7 /* Convertation.swift */; };
 		A94A7C2F27D3876A00E23EB7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A7C2E27D3876A00E23EB7 /* AppDelegate.swift */; };
 		A94A7C3127D3876A00E23EB7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A7C3027D3876A00E23EB7 /* SceneDelegate.swift */; };
 		A94A7C3327D3876A00E23EB7 /* CurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A7C3227D3876A00E23EB7 /* CurrencyViewController.swift */; };
@@ -21,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A923C7B527D4FD4900E929B7 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		A923C7B927D4FD7600E929B7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A923C7BB27D4FE9400E929B7 /* BasicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicError.swift; sourceTree = "<group>"; };
+		A923C7BF27D5003F00E929B7 /* Convertation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convertation.swift; sourceTree = "<group>"; };
 		A94A7C2B27D3876A00E23EB7 /* CurrencyiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A94A7C2E27D3876A00E23EB7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A94A7C3027D3876A00E23EB7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +55,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A923C7B727D4FD5A00E929B7 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				A923C7B527D4FD4900E929B7 /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		A923C7B827D4FD6800E929B7 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A923C7B927D4FD7600E929B7 /* Constants.swift */,
+				A923C7BB27D4FE9400E929B7 /* BasicError.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A923C7BE27D5003600E929B7 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				A923C7BF27D5003F00E929B7 /* Convertation.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
 		A94A7C2227D3876A00E23EB7 = {
 			isa = PBXGroup;
 			children = (
@@ -66,9 +99,12 @@
 		A94A7C2D27D3876A00E23EB7 /* CurrencyiOS */ = {
 			isa = PBXGroup;
 			children = (
+				A923C7BE27D5003600E929B7 /* Response */,
+				A923C7B827D4FD6800E929B7 /* Core */,
 				A94A7C4327D387CC00E23EB7 /* App */,
 				A94A7C4427D387EC00E23EB7 /* Resourcess */,
 				A9E48E1127D388E40061B09D /* Coordinator */,
+				A923C7B727D4FD5A00E929B7 /* NetworkManager */,
 				A94A7C4227D387AB00E23EB7 /* CurrencyScreen */,
 			);
 			path = CurrencyiOS;
@@ -197,10 +233,14 @@
 				A984F81827D39FDB00F8132D /* MyBalancesCell.swift in Sources */,
 				A9E48E1327D388FF0061B09D /* AppCoordinator.swift in Sources */,
 				A9E48E1727D38A120061B09D /* CurrencyViewModel.swift in Sources */,
+				A923C7BC27D4FE9400E929B7 /* BasicError.swift in Sources */,
 				A94A7C3327D3876A00E23EB7 /* CurrencyViewController.swift in Sources */,
+				A923C7C027D5003F00E929B7 /* Convertation.swift in Sources */,
+				A923C7B627D4FD4900E929B7 /* NetworkManager.swift in Sources */,
 				A9E48E1527D389870061B09D /* CurrencyCoordinator.swift in Sources */,
 				A94A7C2F27D3876A00E23EB7 /* AppDelegate.swift in Sources */,
 				A94A7C3127D3876A00E23EB7 /* SceneDelegate.swift in Sources */,
+				A923C7BA27D4FD7600E929B7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

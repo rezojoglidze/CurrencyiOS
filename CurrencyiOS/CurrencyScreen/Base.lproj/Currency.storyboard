@@ -58,6 +58,9 @@
                                                 <color key="tintColor" systemColor="systemBackgroundColor"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <connections>
+                                                    <action selector="submitBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="k1V-jh-ZLF"/>
+                                                </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JzN-Lz-8du" userLabel="Amount Convert View">
                                                 <rect key="frame" x="0.0" y="154" width="414" height="180"/>
@@ -234,7 +237,7 @@
                     <connections>
                         <outlet property="BoughtCurrencyValue" destination="rmW-U0-JlS" id="MKu-Fo-1c3"/>
                         <outlet property="BuyButton" destination="0TQ-hj-06V" id="bVE-AS-kbT"/>
-                        <outlet property="myBalanceCollectionView" destination="sPi-aS-hqZ" id="gqv-kB-GA7"/>
+                        <outlet property="myBalanceCollectionView" destination="sPi-aS-hqZ" id="7CR-ze-vep"/>
                         <outlet property="scrollView" destination="Hew-Bj-yPH" id="07Y-CC-U7R"/>
                         <outlet property="sellButton" destination="65y-hb-Ghk" id="vNb-IZ-YMW"/>
                         <outlet property="sellCurrencyAmountTextField" destination="NNq-40-oW5" id="S58-C0-p4k"/>

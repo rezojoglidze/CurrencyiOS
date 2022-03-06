@@ -8,19 +8,19 @@
 import UIKit
 
 protocol CurrencyViewProtocol: AnyObject {
-    
+    func updateBoughtCurrencyValue(convertation: Convertation)
 }
 
 class CurrencyViewController: UIViewController {
     
     @IBOutlet private weak var scrollView: UIScrollView!
-    @IBOutlet private weak var submitBtn: UIButton!
     @IBOutlet private weak var myBalanceCollectionView: UICollectionView!
+    @IBOutlet private weak var submitBtn: UIButton!
     @IBOutlet private weak var BoughtCurrencyValue: UILabel!
     @IBOutlet private weak var sellCurrencyAmountTextField: UITextField!
     @IBOutlet private weak var sellButton: UIButton!
     @IBOutlet private weak var BuyButton: UIButton!
-
+    
     private var pickerView: UIPickerView = UIPickerView()
     private var toolBar = UIToolbar()
 
@@ -60,6 +60,11 @@ class CurrencyViewController: UIViewController {
         showPickerView()
     }
     
+    @IBAction func submitBtnTapped(_ sender: Any) {
+        guard let fromAmount = Double(sellCurrencyAmountTextField.text ?? "0") else { return }
+        viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: fromAmount)
+    }
+    
     
     private func setupView() {
         submitBtn.setTitle("sumbit".uppercased(), for: .normal)
@@ -78,13 +83,21 @@ class CurrencyViewController: UIViewController {
            self.view.addSubview(pickerView)
                    
         toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
-           toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(onDoneButtonTapped))]
+           toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneBtnTapped))]
            self.view.addSubview(toolBar)
     }
     
-    @objc func onDoneButtonTapped() {
+    @objc func doneBtnTapped() {
+        let index = pickerView.selectedRow(inComponent: 0)
+        updateSellButtonWithChoossenCurrency(index: index)
         toolBar.removeFromSuperview()
         pickerView.removeFromSuperview()
+    }
+    
+    private func updateSellButtonWithChoossenCurrency(index: Int) {
+        let selectedCurr = viewModel.getPickerViewSelectedCurrency(with: isSell, row: index)
+        let btn = isSell ? sellButton : BuyButton
+        btn?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
     }
 
     private func setupCollectionView() {
@@ -134,16 +147,13 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return viewModel.pickerViewTitleForRow(isSell: isSell, row: row)
     }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedCurr = viewModel.getPickerViewSelectedCurrency(with: isSell, row: row)
-        let btn = isSell ? sellButton : BuyButton
-        btn?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
-    }
 }
 
 extension CurrencyViewController: CurrencyViewProtocol {
-    
+    func updateBoughtCurrencyValue(convertation: Convertation) {
+        self.BoughtCurrencyValue.text = convertation.amount
+        myBalanceCollectionView.reloadData()
+    }
 }
 
 extension CurrencyViewController: UICollectionViewDataSource, UICollectionViewDelegate {

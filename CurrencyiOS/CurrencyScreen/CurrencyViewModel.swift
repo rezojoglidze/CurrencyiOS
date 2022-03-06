@@ -24,13 +24,14 @@ protocol CurrencyViewModelProtocol: AnyObject {
     func pickerViewTitleForRow(isSell: Bool, row: Int) -> String
     func getMyBalanceInfo(with index: Int) -> (Double, String)
     func getPickerViewSelectedCurrency(with isSell: Bool, row: Int) -> AvailableCurrencies
+    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Double)
 }
 
 class CurrencyViewModel {
     
     weak var view: CurrencyViewProtocol?
     
-    private let userBalance: [AvailableCurrencies: Double] = [
+    private var userBalance: [AvailableCurrencies: Double] = [
         AvailableCurrencies.eur: 1000,
         AvailableCurrencies.usd: 0,
         AvailableCurrencies.jpy: 0
@@ -40,12 +41,69 @@ class CurrencyViewModel {
     var buyCurrencCurrency: AvailableCurrencies = .usd
     var currentAvailableBuyCurrencies: [AvailableCurrencies] = []
     var currentAvailableSellCurrencies: [AvailableCurrencies] = []
-    init(view: CurrencyViewProtocol) {
+    private var convertationCount = 0
+    private var percentOfCommissionFee: Double = 7/100
+    private var commissionFee: Double = 0
+    private var coordinator: CurrencyCoordinator
+    
+    init(view: CurrencyViewProtocol,
+         coordinator: CurrencyCoordinator) {
         self.view = view
+        self.coordinator = coordinator
     }
 }
 
 extension CurrencyViewModel: CurrencyViewModelProtocol {
+    
+    //MARK: Convertation Logics
+    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Double) {
+        if userBalance[sellCurrentCurrency] ?? 0 < fromAmount {
+            coordinator.showAlert(title: "Ohh", text: "\(fromAmount) \(sellCurrentCurrency.rawValue) isnot available in your balance. Change value pls")
+            return
+        }
+        convertationCount += 1
+        countCommissionFee(fromAmount: fromAmount)
+    }
+    
+    private func countCommissionFee(fromAmount: Double) {
+        if convertationCount > 1 {
+            commissionFee = fromAmount * percentOfCommissionFee
+        }
+        
+        loadConvertation(fromAmount: fromAmount)
+    }
+    
+    private func loadConvertation(fromAmount: Double) {
+        NetworkManager.shared.loadConvertation(fromAmount: fromAmount, fromCurrency: sellCurrentCurrency.rawValue, toCurrency: buyCurrencCurrency.rawValue) { [weak self] response in
+            switch response {
+            case .success(let convertation):
+                DispatchQueue.main.sync {
+                    self?.coordinator.showAlert(title: "Currency converted", text: self?.getSuccessConvertationText(fromAmount: fromAmount, convertation: convertation) ?? "")
+                    self?.updateMyBalance(fromAmount, convertation)
+                    self?.view?.updateBoughtCurrencyValue(convertation: convertation)
+                }
+            case .failure(let error):
+                self?.coordinator.showAlert(title: "Something wrong", text: error.localizedDescription)
+            }
+        }
+    }
+    
+    private func updateMyBalance(_ fromAmount: Double, _ convertation: Convertation) {
+                   
+        guard let currentSellCurrencyBalance = userBalance[sellCurrentCurrency],  let currentBuyCurrencyBalance = userBalance[buyCurrencCurrency],
+            let buyCurrencyValue = Double(convertation.amount) else { return }
+       
+        
+        userBalance[sellCurrentCurrency] = currentSellCurrencyBalance - (fromAmount + commissionFee)
+        userBalance[buyCurrencCurrency] = currentBuyCurrencyBalance + buyCurrencyValue
+    }
+    
+    private func getSuccessConvertationText(fromAmount: Double, convertation: Convertation) -> String {
+        return "You have converted \(fromAmount) \(self.sellCurrentCurrency.rawValue) to \(convertation.amount) \(convertation.currency). Commission Fee - \(String(format: "%.3f", commissionFee))  \(self.sellCurrentCurrency.rawValue)"
+    }
+    
+    
+    //MARK: Picker View data
     func getPickerViewSelectedCurrency(with isSell: Bool, row: Int) -> AvailableCurrencies {
         let selectedCurr = isSell ? currentAvailableSellCurrencies[row] : currentAvailableBuyCurrencies[row]
         isSell ? (sellCurrentCurrency = selectedCurr) : (buyCurrencCurrency = selectedCurr)
@@ -75,13 +133,14 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
         isSell ? (currentAvailableSellCurrencies = currencies) : ( currentAvailableBuyCurrencies = currencies)
     }
     
+    //MARK: Collection View data
+    var collectionViewNumberOfItemsInSection: Int {
+        return AvailableCurrencies.allCases.count
+    }
+    
     func getMyBalanceInfo(with index: Int) -> (Double, String) {
         let currency = AvailableCurrencies.allCases[index]
         let balance = userBalance[currency]
         return (balance ?? 0, currency.rawValue)
-    }
-    
-    var collectionViewNumberOfItemsInSection: Int {
-        return AvailableCurrencies.allCases.count
     }
 }
