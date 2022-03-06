@@ -164,7 +164,7 @@ extension CurrencyViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MyBalancesCell.self), for: indexPath) as? MyBalancesCell
         let info = viewModel.getMyBalanceInfo(with: indexPath.row)
-        cell?.fill(text: "\(info.0) \(info.1.uppercased())")
+        cell?.fill(text: "\(String(format: "%.1f", info.0)) \(info.1.uppercased())")
         return cell ?? UICollectionViewCell()
     }
 }

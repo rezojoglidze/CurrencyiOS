@@ -16,10 +16,6 @@ enum AvailableCurrencies: String, CaseIterable {
 protocol CurrencyViewModelProtocol: AnyObject {
     var collectionViewNumberOfItemsInSection: Int { get }
     
-    var sellCurrentCurrency: AvailableCurrencies { get set }
-    var buyCurrencCurrency: AvailableCurrencies { get set }
-    var currentAvailableBuyCurrencies: [AvailableCurrencies] { get }
-    var currentAvailableSellCurrencies: [AvailableCurrencies] { get }
     func pickerViewNumberOfRowsInComponent(isSell: Bool) -> Int
     func pickerViewTitleForRow(isSell: Bool, row: Int) -> String
     func getMyBalanceInfo(with index: Int) -> (Double, String)
@@ -37,10 +33,10 @@ class CurrencyViewModel {
         AvailableCurrencies.jpy: 0
     ]
     
-    var sellCurrentCurrency: AvailableCurrencies = .eur
-    var buyCurrencCurrency: AvailableCurrencies = .usd
-    var currentAvailableBuyCurrencies: [AvailableCurrencies] = []
-    var currentAvailableSellCurrencies: [AvailableCurrencies] = []
+    private var sellCurrentCurrency: AvailableCurrencies = .eur
+    private var buyCurrencCurrency: AvailableCurrencies = .usd
+    private var currentAvailableBuyCurrencies: [AvailableCurrencies] = []
+    private var currentAvailableSellCurrencies: [AvailableCurrencies] = []
     private var convertationCount = 0
     private var percentOfCommissionFee: Double = 7/100
     private var commissionFee: Double = 0
@@ -57,20 +53,20 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
     
     //MARK: Convertation Logics
     func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Double) {
-        if userBalance[sellCurrentCurrency] ?? 0 < fromAmount {
+        convertationCount += 1
+        countCommissionFee(fromAmount: fromAmount)
+        let amountWithCommissionFee = fromAmount + commissionFee
+        if userBalance[sellCurrentCurrency] ?? 0 < amountWithCommissionFee {
             coordinator.showAlert(title: "Ohh", text: "\(fromAmount) \(sellCurrentCurrency.rawValue) isnot available in your balance. Change value pls")
             return
         }
-        convertationCount += 1
-        countCommissionFee(fromAmount: fromAmount)
+        loadConvertation(fromAmount: fromAmount)
     }
     
     private func countCommissionFee(fromAmount: Double) {
         if convertationCount > 1 {
             commissionFee = fromAmount * percentOfCommissionFee
         }
-        
-        loadConvertation(fromAmount: fromAmount)
     }
     
     private func loadConvertation(fromAmount: Double) {
@@ -89,11 +85,9 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
     }
     
     private func updateMyBalance(_ fromAmount: Double, _ convertation: Convertation) {
-                   
         guard let currentSellCurrencyBalance = userBalance[sellCurrentCurrency],  let currentBuyCurrencyBalance = userBalance[buyCurrencCurrency],
             let buyCurrencyValue = Double(convertation.amount) else { return }
        
-        
         userBalance[sellCurrentCurrency] = currentSellCurrencyBalance - (fromAmount + commissionFee)
         userBalance[buyCurrencCurrency] = currentBuyCurrencyBalance + buyCurrencyValue
     }
