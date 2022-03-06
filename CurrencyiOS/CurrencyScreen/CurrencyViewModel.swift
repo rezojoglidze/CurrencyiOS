@@ -22,9 +22,9 @@ class CurrencyViewModel {
     weak var view: CurrencyViewProtocol?
     
     private var userBalance: [Currencies: Double] = [
-        Currencies.eur: 1000,
-        Currencies.usd: 0,
-        Currencies.jpy: 0
+        .eur: 1000,
+        .usd: 0,
+        .jpy: 0
     ]
     
     private var currentSellCurrency: Currencies = .eur
@@ -70,7 +70,7 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
                 DispatchQueue.main.sync {
                     self?.coordinator.showAlert(title: "Currency converted", text: self?.getSuccessConvertationText(fromAmount: fromAmount, convertation: convertation) ?? "")
                     self?.updateMyBalance(fromAmount, convertation)
-                    self?.view?.updateBoughtCurrencyValue(convertation: convertation)
+                    self?.view?.updateBuyCurrencyAmountLabel(convertation: convertation)
                 }
             case .failure(let error):
                 self?.coordinator.showAlert(title: "Something went wrong", text: error.localizedDescription)
@@ -84,7 +84,8 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
     
     //MARK: My Balance Logics
     private func updateMyBalance(_ fromAmount: Double, _ convertation: Convertation) {
-        guard let currentSellCurrencyBalance = userBalance[currentSellCurrency],  let currentBuyCurrencyBalance = userBalance[currentBuyCurrency],
+        guard let currentSellCurrencyBalance = userBalance[currentSellCurrency],
+              let currentBuyCurrencyBalance = userBalance[currentBuyCurrency],
               let buyCurrencyValue = Double(convertation.amount) else { return }
         
         userBalance[currentSellCurrency] = currentSellCurrencyBalance - (fromAmount + commissionFee)
@@ -96,7 +97,6 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
     func getSelectedCurrencyFromPickerView(with isSell: Bool, row: Int) -> Currencies {
         let selectedCurr = isSell ? availableSellCurrencies[row] : availableBuyCurrencies[row]
         isSell ? (currentSellCurrency = selectedCurr) : (currentBuyCurrency = selectedCurr)
-        
         return selectedCurr
     }
     

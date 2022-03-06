@@ -8,18 +8,18 @@
 import UIKit
 
 protocol CurrencyViewProtocol: AnyObject {
-    func updateBoughtCurrencyValue(convertation: Convertation)
+    func updateBuyCurrencyAmountLabel(convertation: Convertation)
 }
 
 class CurrencyViewController: UIViewController {
     
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var myBalanceCollectionView: UICollectionView!
-    @IBOutlet private weak var submitButton: UIButton!
-    @IBOutlet private weak var BoughtCurrencyValueLabel: UILabel!
+    @IBOutlet private weak var buyCurrencyAmountLabel: UILabel!
     @IBOutlet private weak var sellCurrencyAmountTextField: UITextField!
     @IBOutlet private weak var sellButton: UIButton!
-    @IBOutlet private weak var BuyButton: UIButton!
+    @IBOutlet private weak var buyButton: UIButton!
+    @IBOutlet private weak var submitButton: UIButton!
     
     private lazy var pickerView: UIPickerView = UIPickerView()
     private lazy var toolBar = UIToolbar()
@@ -95,7 +95,7 @@ class CurrencyViewController: UIViewController {
     
     private func updateCurrencyButtons(index: Int) {
         let selectedCurr = viewModel.getSelectedCurrencyFromPickerView(with: isSell, row: index)
-        let button = isSell ? sellButton : BuyButton
+        let button = isSell ? sellButton : buyButton
         button?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
     }
 
@@ -149,8 +149,8 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 }
 
 extension CurrencyViewController: CurrencyViewProtocol {
-    func updateBoughtCurrencyValue(convertation: Convertation) {
-        self.BoughtCurrencyValueLabel.text = convertation.amount
+    func updateBuyCurrencyAmountLabel(convertation: Convertation) {
+        self.buyCurrencyAmountLabel.text = convertation.amount
         self.myBalanceCollectionView.reloadData()
     }
 }
