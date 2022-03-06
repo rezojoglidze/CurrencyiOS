@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="Hew-Bj-yPH">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="Hew-Bj-yPH">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zag-oQ-ISF" userLabel="Content View">
@@ -50,7 +50,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcW-hq-kAc">
-                                                <rect key="frame" x="20" y="354" width="374" height="56"/>
+                                                <rect key="frame" x="20" y="394" width="374" height="56"/>
                                                 <color key="backgroundColor" name="AccentColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="56" id="liD-fB-Znq"/>
@@ -59,7 +59,7 @@
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                                 <connections>
-                                                    <action selector="submitBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="k1V-jh-ZLF"/>
+                                                    <action selector="submitButtonnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rgQ-Ob-3a6"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JzN-Lz-8du" userLabel="Amount Convert View">
@@ -93,7 +93,7 @@
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="plain" image="arrow.down" catalog="system" title="EUR"/>
                                                                 <connections>
-                                                                    <action selector="sellCurrencyChooseBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HsS-63-5F5"/>
+                                                                    <action selector="sellCurrencyChooseButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="poD-Tn-T2x"/>
                                                                 </connections>
                                                             </button>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btt-W2-hou" userLabel="bottom line">
@@ -158,7 +158,7 @@
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="plain" image="arrow.down" catalog="system" title="USD"/>
                                                                 <connections>
-                                                                    <action selector="buyCurrencyChooseBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TIz-qg-ima"/>
+                                                                    <action selector="buyCurrencyChooseButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uhh-Jz-YSQ"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -202,7 +202,7 @@
                                             <constraint firstItem="nGC-1P-dTz" firstAttribute="leading" secondItem="Zag-oQ-ISF" secondAttribute="leading" constant="20" id="WyW-ed-nhK"/>
                                             <constraint firstItem="jxG-nn-lyY" firstAttribute="leading" secondItem="Zag-oQ-ISF" secondAttribute="leading" constant="20" id="XuJ-gA-2o0"/>
                                             <constraint firstAttribute="trailing" secondItem="sPi-aS-hqZ" secondAttribute="trailing" constant="20" id="bcM-nH-BJn"/>
-                                            <constraint firstItem="jcW-hq-kAc" firstAttribute="top" secondItem="JzN-Lz-8du" secondAttribute="bottom" constant="20" id="c33-9L-RJE"/>
+                                            <constraint firstItem="jcW-hq-kAc" firstAttribute="top" secondItem="JzN-Lz-8du" secondAttribute="bottom" constant="60" id="c33-9L-RJE"/>
                                             <constraint firstItem="sPi-aS-hqZ" firstAttribute="top" secondItem="nGC-1P-dTz" secondAttribute="bottom" constant="12" id="fNn-86-4wq"/>
                                             <constraint firstItem="JzN-Lz-8du" firstAttribute="leading" secondItem="Zag-oQ-ISF" secondAttribute="leading" id="fjG-aC-132"/>
                                             <constraint firstAttribute="trailing" secondItem="jcW-hq-kAc" secondAttribute="trailing" constant="20" id="lQy-du-uLf"/>
@@ -235,13 +235,13 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="BoughtCurrencyValue" destination="rmW-U0-JlS" id="MKu-Fo-1c3"/>
+                        <outlet property="BoughtCurrencyValueLabel" destination="rmW-U0-JlS" id="MKu-Fo-1c3"/>
                         <outlet property="BuyButton" destination="0TQ-hj-06V" id="bVE-AS-kbT"/>
                         <outlet property="myBalanceCollectionView" destination="sPi-aS-hqZ" id="7CR-ze-vep"/>
                         <outlet property="scrollView" destination="Hew-Bj-yPH" id="07Y-CC-U7R"/>
                         <outlet property="sellButton" destination="65y-hb-Ghk" id="vNb-IZ-YMW"/>
                         <outlet property="sellCurrencyAmountTextField" destination="NNq-40-oW5" id="S58-C0-p4k"/>
-                        <outlet property="submitBtn" destination="jcW-hq-kAc" id="Aol-bV-9eN"/>
+                        <outlet property="submitButton" destination="jcW-hq-kAc" id="Aol-bV-9eN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

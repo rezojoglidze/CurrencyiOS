@@ -17,14 +17,12 @@ class CurrencyCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    
     func start() {
         let view = CurrencyViewController.instantiate()
         let viewModel = CurrencyViewModel(view: view, coordinator: self)
         view.viewModel = viewModel
         navigationController.setViewControllers([view], animated: true)
     }
-    
     
     func showAlert(title: String, text: String) {
         let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)

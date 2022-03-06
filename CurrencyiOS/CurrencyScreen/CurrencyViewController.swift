@@ -15,17 +15,17 @@ class CurrencyViewController: UIViewController {
     
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var myBalanceCollectionView: UICollectionView!
-    @IBOutlet private weak var submitBtn: UIButton!
-    @IBOutlet private weak var BoughtCurrencyValue: UILabel!
+    @IBOutlet private weak var submitButton: UIButton!
+    @IBOutlet private weak var BoughtCurrencyValueLabel: UILabel!
     @IBOutlet private weak var sellCurrencyAmountTextField: UITextField!
     @IBOutlet private weak var sellButton: UIButton!
     @IBOutlet private weak var BuyButton: UIButton!
     
-    private var pickerView: UIPickerView = UIPickerView()
-    private var toolBar = UIToolbar()
+    private lazy var pickerView: UIPickerView = UIPickerView()
+    private lazy var toolBar = UIToolbar()
+    private var isSell: Bool = false
 
     var viewModel: CurrencyViewModelProtocol!
-    private var isSell: Bool = false
     
     static func instantiate() -> CurrencyViewController {
         let storyBoard = UIStoryboard(name: "Currency", bundle: nil)
@@ -50,29 +50,28 @@ class CurrencyViewController: UIViewController {
     }
     
     
-    @IBAction func sellCurrencyChooseBtnTapped(_ sender: Any) {
+    @IBAction func sellCurrencyChooseButtonTapped(_ sender: Any) {
         isSell = true
         showPickerView()
     }
     
-    @IBAction func buyCurrencyChooseBtnTapped(_ sender: Any) {
+    @IBAction func buyCurrencyChooseButtonTapped(_ sender: Any) {
         isSell = false
         showPickerView()
     }
     
-    @IBAction func submitBtnTapped(_ sender: Any) {
+    @IBAction func submitButtonnTapped(_ sender: Any) {
         guard let fromAmount = Double(sellCurrencyAmountTextField.text ?? "0") else { return }
         viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: fromAmount)
     }
     
     
     private func setupView() {
-        submitBtn.setTitle("sumbit".uppercased(), for: .normal)
-        submitBtn.layer.cornerRadius = 24
+        submitButton.setTitle("submit".uppercased(), for: .normal)
+        submitButton.layer.cornerRadius = 24
     }
     
     private func showPickerView() {
-        pickerView = UIPickerView.init()
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.backgroundColor = UIColor.white
@@ -81,23 +80,23 @@ class CurrencyViewController: UIViewController {
         pickerView.contentMode = .center
         pickerView.frame = CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300)
            self.view.addSubview(pickerView)
-                   
+                
         toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
-           toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneBtnTapped))]
+           toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))]
            self.view.addSubview(toolBar)
     }
     
-    @objc func doneBtnTapped() {
+    @objc func doneButtonTapped() {
         let index = pickerView.selectedRow(inComponent: 0)
-        updateSellButtonWithChoossenCurrency(index: index)
+        updateCurrencyButtons(index: index)
         toolBar.removeFromSuperview()
         pickerView.removeFromSuperview()
     }
     
-    private func updateSellButtonWithChoossenCurrency(index: Int) {
-        let selectedCurr = viewModel.getPickerViewSelectedCurrency(with: isSell, row: index)
-        let btn = isSell ? sellButton : BuyButton
-        btn?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
+    private func updateCurrencyButtons(index: Int) {
+        let selectedCurr = viewModel.getSelectedCurrencyFromPickerView(with: isSell, row: index)
+        let button = isSell ? sellButton : BuyButton
+        button?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
     }
 
     private func setupCollectionView() {
@@ -151,8 +150,8 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 
 extension CurrencyViewController: CurrencyViewProtocol {
     func updateBoughtCurrencyValue(convertation: Convertation) {
-        self.BoughtCurrencyValue.text = convertation.amount
-        myBalanceCollectionView.reloadData()
+        self.BoughtCurrencyValueLabel.text = convertation.amount
+        self.myBalanceCollectionView.reloadData()
     }
 }
 
