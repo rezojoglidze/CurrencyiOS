@@ -132,14 +132,12 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return isSell ? viewModel.currentAvailableSellCurrencies[row].rawValue : viewModel.currentAvailableBuyCurrencies[row].rawValue
+        return viewModel.pickerViewTitleForRow(isSell: isSell, row: row)
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedCurr =  isSell ? viewModel.currentAvailableSellCurrencies[row] : viewModel.currentAvailableBuyCurrencies[row]
-        
+        let selectedCurr = viewModel.getPickerViewSelectedCurrency(with: isSell, row: row)
         let btn = isSell ? sellButton : BuyButton
-        isSell ? (viewModel.sellCurrentCurrency = selectedCurr) : (viewModel.buyCurrencCurrency = selectedCurr)
         btn?.setTitle(selectedCurr.rawValue.uppercased(), for: .normal)
     }
 }
