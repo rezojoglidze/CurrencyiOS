@@ -7,14 +7,21 @@
 
 import Foundation
 
-class NetworkManager {
-    
-    static let shared = NetworkManager()
-    
-    func loadConvertation(fromAmount: Double,
-                  fromCurrency: String,
-                  toCurrency: String,
-                  completionHandler: @escaping (Result<Convertation, Error>) -> Void) {
+protocol CurrencyUseCase {
+    func loadConvertation(fromAmount: Decimal, fromCurrency: String, toCurrency: String,
+                          completionHandler: @escaping (Result<Convertation, Error>) -> Void)
+}
+
+final class DefaultCurrencyUseCases {
+    static let shared: CurrencyUseCase = DefaultCurrencyUseCases()
+    private init() { }
+}
+
+extension DefaultCurrencyUseCases: CurrencyUseCase {
+    func loadConvertation(fromAmount: Decimal,
+                          fromCurrency: String,
+                          toCurrency: String,
+                          completionHandler: @escaping (Result<Convertation, Error>) -> Void) {
         guard let url = Constants.getCurrencyExchangeUrl(fromAmount: fromAmount, fromCurrency: fromCurrency, toCurrency: toCurrency) else { return }
         
         URLSession.shared.dataTask(with: url) { data, response, error in

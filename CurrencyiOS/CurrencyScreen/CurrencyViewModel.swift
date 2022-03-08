@@ -12,16 +12,16 @@ protocol CurrencyViewModelProtocol: AnyObject {
     
     func pickerViewNumberOfRowsInComponent(isSell: Bool) -> Int
     func pickerViewTitleForRow(isSell: Bool, row: Int) -> String
-    func getMyBalanceInfo(with index: Int) -> (Double, String)
+    func getMyBalanceInfo(with index: Int) -> (Decimal, String)
     func getSelectedCurrencyFromPickerView(with isSell: Bool, row: Int) -> Currencies
-    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Double)
+    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Decimal)
 }
 
 class CurrencyViewModel {
     
     weak var view: CurrencyViewProtocol?
     
-    private var userBalance: [Currencies: Double] = [
+    private var userBalance: [Currencies: Decimal] = [
         .eur: 1000,
         .usd: 0,
         .jpy: 0
@@ -32,21 +32,24 @@ class CurrencyViewModel {
     private var availableBuyCurrencies: [Currencies] = []
     private var availableSellCurrencies: [Currencies] = []
     private var convertationCount = 0
-    private let percentOfCommissionFee: Double = 7/100
-    private var commissionFee: Double = 0
+    private let percentOfCommissionFee: Decimal = 7/100
+    private var commissionFee: Decimal = 0
     private let coordinator: CurrencyCoordinator
+    private let currencyUseCase: CurrencyUseCase
     
     init(view: CurrencyViewProtocol,
-         coordinator: CurrencyCoordinator) {
+         coordinator: CurrencyCoordinator,
+         currencyUseCase: CurrencyUseCase) {
         self.view = view
         self.coordinator = coordinator
+        self.currencyUseCase = currencyUseCase
     }
 }
 
 extension CurrencyViewModel: CurrencyViewModelProtocol {
     
     //MARK: Convertation Logics
-    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Double) {
+    func checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Decimal) {
         countCommissionFee(fromAmount: fromAmount)
         let amountWithCommissionFee = fromAmount + commissionFee
         if userBalance[currentSellCurrency] ?? 0 < amountWithCommissionFee {
@@ -56,14 +59,14 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
         loadConvertation(fromAmount: fromAmount)
     }
     
-    private func countCommissionFee(fromAmount: Double) {
+    private func countCommissionFee(fromAmount: Decimal) {
         if convertationCount > 4 { //on the sixth convertation convertationCount value will be 5 because it increase when response comes.
             commissionFee = fromAmount * percentOfCommissionFee
         }
     }
     
-    private func loadConvertation(fromAmount: Double) {
-        NetworkManager.shared.loadConvertation(fromAmount: fromAmount, fromCurrency: currentSellCurrency.rawValue, toCurrency: currentBuyCurrency.rawValue) { [weak self] response in
+    private func loadConvertation(fromAmount: Decimal) {
+        currencyUseCase.loadConvertation(fromAmount: fromAmount, fromCurrency: currentSellCurrency.rawValue, toCurrency: currentBuyCurrency.rawValue) { [weak self] response in
             self?.convertationCount += 1
             switch response {
             case .success(let convertation):
@@ -78,18 +81,18 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
         }
     }
     
-    private func getSuccessConvertationText(fromAmount: Double, convertation: Convertation) -> String {
-        return "You have converted \(fromAmount) \(self.currentSellCurrency.rawValue) to \(convertation.amount) \(convertation.currency). Commission Fee - \(String(format: "%.3f", commissionFee))  \(self.currentSellCurrency.rawValue)"
+    private func getSuccessConvertationText(fromAmount: Decimal, convertation: Convertation) -> String {
+        return "You have converted \(fromAmount) \(self.currentSellCurrency.rawValue) to \(convertation.amount) \(convertation.currency). Commission Fee - \(commissionFee.stringValue())  \(self.currentSellCurrency.rawValue)"
     }
     
     //MARK: My Balance Logics
-    private func updateMyBalance(_ fromAmount: Double, _ convertation: Convertation) {
+    private func updateMyBalance(_ fromAmount: Decimal, _ convertation: Convertation) {
         guard let currentSellCurrencyBalance = userBalance[currentSellCurrency],
               let currentBuyCurrencyBalance = userBalance[currentBuyCurrency],
               let buyCurrencyValue = Double(convertation.amount) else { return }
         
         userBalance[currentSellCurrency] = currentSellCurrencyBalance - (fromAmount + commissionFee)
-        userBalance[currentBuyCurrency] = currentBuyCurrencyBalance + buyCurrencyValue
+        userBalance[currentBuyCurrency] = currentBuyCurrencyBalance + Decimal(buyCurrencyValue)
     }
     
     
@@ -127,7 +130,7 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
         return Currencies.allCases.count
     }
     
-    func getMyBalanceInfo(with index: Int) -> (Double, String) {
+    func getMyBalanceInfo(with index: Int) -> (Decimal, String) {
         let currency = Currencies.allCases[index]
         let balance = userBalance[currency]
         return (balance ?? 0, currency.rawValue)

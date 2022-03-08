@@ -239,6 +239,7 @@
                         <outlet property="buyCurrencyAmountLabel" destination="rmW-U0-JlS" id="MKu-Fo-1c3"/>
                         <outlet property="myBalanceCollectionView" destination="sPi-aS-hqZ" id="7CR-ze-vep"/>
                         <outlet property="scrollView" destination="Hew-Bj-yPH" id="07Y-CC-U7R"/>
+                        <outlet property="scrollViewBottomLayout" destination="J85-6K-O1d" id="B6n-KZ-8AD"/>
                         <outlet property="sellButton" destination="65y-hb-Ghk" id="vNb-IZ-YMW"/>
                         <outlet property="sellCurrencyAmountTextField" destination="NNq-40-oW5" id="S58-C0-p4k"/>
                         <outlet property="submitButton" destination="jcW-hq-kAc" id="Aol-bV-9eN"/>

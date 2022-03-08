@@ -20,6 +20,7 @@ class CurrencyViewController: UIViewController {
     @IBOutlet private weak var sellButton: UIButton!
     @IBOutlet private weak var buyButton: UIButton!
     @IBOutlet private weak var submitButton: UIButton!
+    @IBOutlet private weak var scrollViewBottomLayout: NSLayoutConstraint!
     
     private lazy var pickerView: UIPickerView = UIPickerView()
     private lazy var toolBar = UIToolbar()
@@ -61,14 +62,15 @@ class CurrencyViewController: UIViewController {
     }
     
     @IBAction func submitButtonnTapped(_ sender: Any) {
-        guard let fromAmount = Double(sellCurrencyAmountTextField.text ?? "0") else { return }
-        viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: fromAmount)
+        guard let amount = self.sellCurrencyAmountTextField.textToDouble() else { return }
+//        viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Decimal(amount))
     }
     
     
     private func setupView() {
         submitButton.setTitle("submit".uppercased(), for: .normal)
         submitButton.layer.cornerRadius = 24
+        sellCurrencyAmountTextField.delegate = self
     }
     
     private func showPickerView() {
@@ -119,12 +121,11 @@ class CurrencyViewController: UIViewController {
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
         
         if notification.name == UIResponder.keyboardWillHideNotification {
-            scrollView.contentInset = .zero
+            scrollViewBottomLayout.constant = 0
         } else {
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
+            scrollViewBottomLayout.constant = -keyboardViewEndFrame.height
         }
-        
-        scrollView.scrollIndicatorInsets = scrollView.contentInset
+        view.layoutIfNeeded()
     }
     
     private func removeKeyboardObservers() {
@@ -132,6 +133,18 @@ class CurrencyViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+}
+
+extension CurrencyViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        print(newText)
+        if let regex = try? NSRegularExpression(pattern: "^[0-9]*((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
+            return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
+        }
+        return false
+    }
 }
 
 extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -163,7 +176,7 @@ extension CurrencyViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MyBalancesCell.self), for: indexPath) as? MyBalancesCell
         let info = viewModel.getMyBalanceInfo(with: indexPath.row)
-        cell?.fill(text: "\(String(format: "%.1f", info.0)) \(info.1.uppercased())")
+        cell?.fill(text: "\(info.0.stringValue(rounding: 1)) \(info.1.uppercased())")
         return cell ?? UICollectionViewCell()
     }
 }

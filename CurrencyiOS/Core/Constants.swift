@@ -9,7 +9,7 @@ import Foundation
 
 struct Constants {
     
-    static func getCurrencyExchangeUrl(fromAmount: Double, fromCurrency: String, toCurrency: String) -> URL? {
+    static func getCurrencyExchangeUrl(fromAmount: Decimal, fromCurrency: String, toCurrency: String) -> URL? {
         var components = URLComponents()
         components.scheme = "http"
         components.host = "api.evp.lt"
