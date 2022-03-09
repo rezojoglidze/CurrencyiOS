@@ -9,6 +9,7 @@ import UIKit
 
 protocol CurrencyViewProtocol: AnyObject {
     func updateBuyCurrencyAmountLabel(convertation: Convertation)
+    func configureSubmitButton(isEnabled: Bool)
 }
 
 class CurrencyViewController: UIViewController {
@@ -63,9 +64,8 @@ class CurrencyViewController: UIViewController {
     
     @IBAction func submitButtonnTapped(_ sender: Any) {
         guard let amount = self.sellCurrencyAmountTextField.textToDouble() else { return }
-//        viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Decimal(amount))
+        viewModel.checkIfSellCurrencyBalanceIsEnoughToConvertation(fromAmount: Decimal(amount))
     }
-    
     
     private func setupView() {
         submitButton.setTitle("submit".uppercased(), for: .normal)
@@ -139,7 +139,6 @@ extension CurrencyViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let text = (textField.text ?? "") as NSString
         let newText = text.replacingCharacters(in: range, with: string)
-        print(newText)
         if let regex = try? NSRegularExpression(pattern: "^[0-9]*((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
             return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
         }
@@ -165,6 +164,11 @@ extension CurrencyViewController: CurrencyViewProtocol {
     func updateBuyCurrencyAmountLabel(convertation: Convertation) {
         self.buyCurrencyAmountLabel.text = convertation.amount
         self.myBalanceCollectionView.reloadData()
+    }
+    
+    func configureSubmitButton(isEnabled: Bool) {
+        submitButton.isEnabled = isEnabled
+        submitButton.backgroundColor = isEnabled ? .systemBlue : .darkGray
     }
 }
 

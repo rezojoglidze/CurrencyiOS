@@ -57,6 +57,7 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
             return
         }
         loadConvertation(fromAmount: fromAmount)
+        view?.configureSubmitButton(isEnabled: false)
     }
     
     private func countCommissionFee(fromAmount: Decimal) {
@@ -74,6 +75,7 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
                     self?.coordinator.showAlert(title: "Currency converted", text: self?.getSuccessConvertationText(fromAmount: fromAmount, convertation: convertation) ?? "")
                     self?.updateMyBalance(fromAmount, convertation)
                     self?.view?.updateBuyCurrencyAmountLabel(convertation: convertation)
+                    self?.view?.configureSubmitButton(isEnabled: true)
                 }
             case .failure(let error):
                 self?.coordinator.showAlert(title: "Something went wrong", text: error.localizedDescription)
