@@ -19,6 +19,7 @@ protocol CurrencyViewModelProtocol: AnyObject {
 
 class CurrencyViewModel {
     
+
     weak var view: CurrencyViewProtocol?
     
     private var userBalance: [Currencies: Decimal] = [
@@ -31,11 +32,25 @@ class CurrencyViewModel {
     private var currentBuyCurrency: Currencies = .usd
     private var availableBuyCurrencies: [Currencies] = []
     private var availableSellCurrencies: [Currencies] = []
-    private var convertationCount = 0
     private let percentOfCommissionFee: Decimal = 7/100
     private var commissionFee: Decimal = 0
     private let coordinator: CurrencyCoordinator
     private let currencyUseCase: CurrencyUseCase
+    
+    private let threadSafeCountQueue = DispatchQueue(label: "com.joglidze.CurrencyiOS")
+    private var _convertationCount = 0
+    private var convertationCount: Int {
+        get {
+            return threadSafeCountQueue.sync {
+                _convertationCount
+            }
+        }
+        set {
+            threadSafeCountQueue.sync {
+                _convertationCount = newValue
+            }
+        }
+    }
     
     init(view: CurrencyViewProtocol,
          coordinator: CurrencyCoordinator,
@@ -56,8 +71,8 @@ extension CurrencyViewModel: CurrencyViewModelProtocol {
             coordinator.showAlert(title: "Ohh", text: "Unfortunately, balance isn't enough. Change value pls")
             return
         }
-        loadConvertation(fromAmount: fromAmount)
         view?.configureSubmitButton(isEnabled: false)
+        loadConvertation(fromAmount: fromAmount)
     }
     
     private func countCommissionFee(fromAmount: Decimal) {
