@@ -20,7 +20,7 @@ protocol CurrencyViewModelProtocol: AnyObject {
 class CurrencyViewModel {
     
 
-    weak var view: CurrencyViewProtocol?
+    private weak var view: CurrencyViewProtocol?
     
     private var userBalance: [Currencies: Decimal] = [
         .eur: 1000,
